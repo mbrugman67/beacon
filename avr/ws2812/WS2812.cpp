@@ -101,7 +101,7 @@ WS2812::~WS2812() {
 
 #ifndef ARDUINO
 void WS2812::setOutput(const volatile uint8_t* port, volatile uint8_t* reg, uint8_t pin) {
-	pinMask = (1<<pin);
+	pinMask = (1 << pin);
 	ws2812_port = port;
 	ws2812_port_reg = reg;
 }

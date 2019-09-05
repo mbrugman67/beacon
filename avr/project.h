@@ -79,7 +79,7 @@ struct response_to_host_t
 #include "sys/hardware.h"
 #include "usb/usbHIDComm.h"
 #include "ws2812/WS2812.h"
-#include "desk.h"
+#include "beacon.h"
 
 /*********************************************
 * config
@@ -89,7 +89,7 @@ struct response_to_host_t
 /**********************************************
 * LED winky light classes
 **********************************************/
-extern desk robsDesk;
+extern beacon flow;
 
 /**********************************************
 * comms to the host (game)
@@ -106,19 +106,14 @@ static const S_usb_product_string_descriptor usbProductString
     sizeof(S_usb_product_string_descriptor),
     DESCRIPTOR_STRING,
     {
-        USB_unicode('R'),       //  0
-        USB_unicode('o'),       //  1
-        USB_unicode('b'),       //  2
-        USB_unicode(' '),       //  3
-        USB_unicode('A'),       //  4
+        USB_unicode('B'),       //  0
+        USB_unicode('e'),       //  1
+        USB_unicode('a'),       //  2
+        USB_unicode('c'),       //  3
+        USB_unicode('o'),       //  4
         USB_unicode('n'),       //  5
-        USB_unicode('n'),       //  6
-        USB_unicode('o'),       //  7
-        USB_unicode('y'),       //  8
-        USB_unicode('e'),       //  9
-        USB_unicode('r'),       // 10
-        USB_unicode(' '),       // 11
-        USB_unicode('\0')       // 12
+        USB_unicode(' '),       //  6
+        USB_unicode('\0')       //  7
     }
 };
 
@@ -127,7 +122,7 @@ static const S_usb_product_string_descriptor usbProductString
 ***********************************************
 * Define device ID, 2 byte value
 ***********************************************/
-#define DEVICE_ID   0x10
+#define DEVICE_ID   0x01
 
 /**********************************************
 * Report Sizes

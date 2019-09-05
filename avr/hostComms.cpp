@@ -9,7 +9,7 @@ HOST_COMMS::HOST_COMMS()
     resp.bootCount = cfg.config.bootCount;
     resp.sequence = 0;
 
-    last = desk::DL_CLEAR;
+    last = beacon::BL_CLEAR;
 }
 
 void HOST_COMMS::update(bool rwNow)
@@ -26,15 +26,14 @@ void HOST_COMMS::update(bool rwNow)
 
             if (usb.read((char*)&cfg.config.cmd, sizeof(host_command_t)))
             {
-                desk::desk_light_t c = (desk::desk_light_t)cfg.config.cmd.ptrn;
+                beacon::beacon_light_t c = (beacon::beacon_light_t)cfg.config.cmd.ptrn;
 
                 if (last != c)
                 {
                     last = c;                
                     
-                    robsDesk.setDeskPattern(c, cfg.config.cmd.posn, 
-                                        cfg.config.cmd.red, cfg.config.cmd.grn, cfg.config.cmd.blu, 
-                                        cfg.config.cmd.len);
+                    flow.setBeaconPattern(c, cfg.config.cmd.posn, 
+                                        cfg.config.cmd.red, cfg.config.cmd.grn, cfg.config.cmd.blu);
                 }
 
                 ++resp.sequence;

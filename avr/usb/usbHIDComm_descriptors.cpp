@@ -19,7 +19,7 @@ static const usbDeviceDescriptor USB_DEV_DESC =
     0,                  // device subclass
     0,                  // device protocol
     EP_CONTROL_LENGTH,  // length of control endpoint
-    BTG_MFG_ID,         // MFG ID
+    MFG_ID,             // MFG ID
     DEVICE_ID,          // device ID
     0x100,              // release
     1,                  // manufacturer index
@@ -99,18 +99,20 @@ static const S_usb_manufacturer_string_descriptor usbManufacturerString
     sizeof(S_usb_product_string_descriptor),
     DESCRIPTOR_STRING,
     {
-        USB_unicode('B'),       //  0
-        USB_unicode('A'),       //  1
-        USB_unicode('Y'),       //  2
-        USB_unicode('T'),       //  3
-        USB_unicode('E'),       //  4
-        USB_unicode('K'),       //  5
-        USB_unicode(' '),       //  6
-        USB_unicode('G'),       //  7
-        USB_unicode('A'),       //  8
-        USB_unicode('M'),       //  9
-        USB_unicode('E'),       // 10
-        USB_unicode('S')        // 11
+        USB_unicode('M'),       //  0
+        USB_unicode('a'),       //  1
+        USB_unicode('t'),       //  2
+        USB_unicode('t'),       //  3
+        USB_unicode('y'),       //  4
+        USB_unicode('d'),       //  5
+        USB_unicode('y'),       //  6
+        USB_unicode('n'),       //  7
+        USB_unicode('e'),       //  8
+        USB_unicode(' '),       //  9
+        USB_unicode('C'),       // 10
+        USB_unicode('o'),       // 11
+        USB_unicode('r'),       // 12
+        USB_unicode('p')        // 13
     }
 };
 /*

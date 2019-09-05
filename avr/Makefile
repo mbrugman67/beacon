@@ -19,7 +19,7 @@ SLEEP=/bin/sleep
 
 OBJDIR=./obj/
 OUTDIR=./out/
-TARGET=$(OUTDIR)rob
+TARGET=$(OUTDIR)beacon
 
 #LIBPATH=-L$(shell dirname $(shell locate crtat90c8534.o | grep avr-gcc))
 
@@ -29,16 +29,9 @@ INCDIRS=-I./
 LDFLAGS=-mmcu=atmega32u4 -Wl,-u,--gc-sections,-Map=$(TARGET).map,--cref
 LDLIBS=
 
-SOURCES=$(wildcard *.cpp)
-SOURCES+=$(wildcard ws2812/*.cpp)
-SOURCES+=$(wildcard usb/*.cpp)
-SOURCES+=$(wildcard sys/*.cpp)
+SOURCES=$(shell find . -type f -name '*.cpp')
+HEADERS=$(shell find . -type f -name '*.h')
 
-HEADERS=$(wildcard *.h)
-HEADERS+=$(wildcard ws2812/*.h)
-HEADERS+=$(wildcard usb/*.h)
-HEADERS+=$(wildcard sys/*.h)
-#HEADERS+=$(wildcard FastLED-3.1.6/*.h)
 OBJECTS=$(addprefix $(OBJDIR),$(SOURCES:.cpp=.o))
 
 $(OBJDIR)%.o: %.cpp $(HEADERS) Makefile
@@ -81,6 +74,6 @@ clean:
 	rm -rf $(OUTDIR) $(OBJDIR)
 
 load:
-	$(eval BOARD := $(shell btBootycall 16 && ls /dev/cu.usbmod*))
+	$(eval BOARD := $(shell btBootycall 1 && ls /dev/cu.usbmod*))
 	@echo target device is $(BOARD), writing flash 
 	$(DUDE) -F -V -u -c avr109 -p m32u4 -P $(BOARD) -b 57600 -D -U flash:w:$(TARGET).hex 

@@ -1,16 +1,5 @@
 /**************************************************************
-* Squiggle RGB (non-addressable) lighting
-***************************************************************
-* M.Brugman 02 August 2017
-* (c) 2017, Bay Tek Games
-***************************************************************
-* 3 zones of lighting:
-*   circular surround of drop button
-*   rectangular panel at lower edge with drop button
-*   upper pachinko area (internal edges)
-***************************************************************
-* The Makefile should locate the correct version of avr-gcc
-* without the trouble of Configure or CMake
+* Beacon RGB (addressable) lighting
 ***************************************************************/
 #include "project.h"
 
@@ -23,7 +12,7 @@ uint16_t bootLoaderCrazyValue __attribute__ ((section (".noinit")));
 void (*jumpToBL) (void) = (void (*)(void))0x3800;
 
 // global
-desk robsDesk;
+beacon flow;
 
 int main(void)
 {
@@ -51,8 +40,8 @@ int main(void)
     {
         // handle tx/rx LED
         handleTXRX();
-
-        robsDesk.update();
+        
+        flow.update();
 
         // request for bootloader?  Set the non-clearable-on-reset value and force a restart 
         if (hostComms.bootLoaderRequested())

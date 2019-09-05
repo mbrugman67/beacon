@@ -15,7 +15,7 @@ public:
 
 private:
     response_to_host_t resp;
-    desk::desk_light_t last;
+    beacon::beacon_light_t last;
 
     CFG cfg;
     usbHID usb;

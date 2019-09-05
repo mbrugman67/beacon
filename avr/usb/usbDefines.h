@@ -8,17 +8,7 @@
 
 #include <avr/pgmspace.h>
 
-/********************************************
-* This is the idVendor that is used by
-* BayTek Games.  If you change this, you'll
-* have to change a bunch of other stuff on 
-* the host side; the application, udev 
-* rules, ...  Just don't do it
-*
-* b337 makes me think of "beer".  
-* Beer is good.
-********************************************/
-#define BTG_MFG_ID          0xb337
+#define MFG_ID          0xb337
 
 
 #define USB_unicode(a)      ((uint16_t)(a))
