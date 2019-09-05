@@ -11,6 +11,7 @@ CONE_HEIGHT = 15;
 CONE_MAJOR_RADIUS = 15;
 OFFSET_ANGLE = 15;
 WALL_THICKNESS = 6;
+BASE_HEIGHT = 20;
 
 module beacon(x, y, z, h, draw_sphere = true)
 {
@@ -50,7 +51,6 @@ module beacon(x, y, z, h, draw_sphere = true)
 
 module base(x, y, z, r)
 {
-   
    difference()
    {
       color([0, 0, 1])
@@ -81,6 +81,40 @@ module base(x, y, z, r)
          }
       }      
      
+   }
+   
+   difference()
+   {
+      color([0, 0, 1])
+      translate([x, y, z - BASE_HEIGHT / 2])
+      cube([r * 2, r * 2, BASE_HEIGHT], true);
+      
+      translate([0, 0, z - BASE_HEIGHT / 2 - 1])
+      cylinder(BASE_HEIGHT + 4, r - WALL_THICKNESS, r - WALL_THICKNESS, true);
+
+      foot_offset = r - WALL_THICKNESS - 3;
+      foot_radius = 5;
+      
+      for (x1 = [foot_offset, -foot_offset])
+      {
+         translate([x1, 0, z - BASE_HEIGHT - foot_radius / 4])
+         rotate([90, 0, 0])
+         cylinder(r * 2 + 2, foot_radius, foot_radius, true);
+      }
+      
+      for (y1 = [foot_offset, -foot_offset])
+      {
+         translate([0, y1, z - BASE_HEIGHT - foot_radius / 4])
+         rotate([0, 90, 0])
+         cylinder(r * 2 + 2, foot_radius, foot_radius, true);
+      
+      }
+
+      translate([0, 0, z - BASE_HEIGHT + foot_radius / 4])
+      {
+         cube ([foot_offset * 2, r * 2 + 4, foot_radius], true);
+         cube ([r * 2 + 4, foot_offset * 2, foot_radius], true);
+      }
    }
 }
 
