@@ -2,14 +2,17 @@
 // beacon
 //-----------------------------
 DRAW_BEACONS = true;
+LARGE_BEACON_ONLY = false;
+SMALL_BEACON_ONLY = false;
+DRAW_BASE = true;
+DRAW_BOARD_SUPPORT = false;
 
-
-SHAFT_RADIUS = 4;
-SHAFT_TUNNEL_RADIUS = 2;
+SHAFT_RADIUS = 5;
+SHAFT_TUNNEL_RADIUS = 2.7;
 BALL_RADIUS = 20;
 CONE_HEIGHT = 15;
 CONE_MAJOR_RADIUS = 15;
-OFFSET_ANGLE = 15;
+OFFSET_ANGLE = 13;
 WALL_THICKNESS = 6;
 BASE_HEIGHT = 20;
 
@@ -65,7 +68,7 @@ module base(x, y, z, r)
       translate([0, 0, r - SHAFT_RADIUS / 2])
       {
          cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true);
-         cylinder(WALL_THICKNESS * .7, SHAFT_RADIUS, SHAFT_RADIUS, true);
+         cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true);
       }
       
       for (rx = [OFFSET_ANGLE, -OFFSET_ANGLE])
@@ -76,7 +79,7 @@ module base(x, y, z, r)
             translate([0, 0, r - SHAFT_RADIUS / 2])
             {
                cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true);
-               cylinder(WALL_THICKNESS * .7, SHAFT_RADIUS, SHAFT_RADIUS, true);
+               cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true);
             }
          }
       }      
@@ -92,8 +95,8 @@ module base(x, y, z, r)
       translate([0, 0, z - BASE_HEIGHT / 2 - 1])
       cylinder(BASE_HEIGHT + 4, r - WALL_THICKNESS, r - WALL_THICKNESS, true);
 
-      foot_offset = r - WALL_THICKNESS - 3;
-      foot_radius = 5;
+      foot_offset = r - WALL_THICKNESS - 6;
+      foot_radius = 6;
       
       for (x1 = [foot_offset, -foot_offset])
       {
@@ -115,22 +118,56 @@ module base(x, y, z, r)
          cube ([foot_offset * 2, r * 2 + 4, foot_radius], true);
          cube ([r * 2 + 4, foot_offset * 2, foot_radius], true);
       }
+      
+      color([1, 0, 0])
+      translate([0, 23, -BASE_HEIGHT + 4 + 1.5])
+      cube([17.5, 32, 3], true);
+      
+
+      color([0, 0, 1])
+      translate([0, -33, -BASE_HEIGHT + 5])
+      rotate([90, 90, 0])
+      cylinder(20, 5, 5, true);
    }
 }
 
-base(0, 0, 0, 25);
+if (DRAW_BASE == true)
+{
+   base(0, 0, 0, 40);
+}
 
 if (DRAW_BEACONS == true)
 {
-   rotate([0, 0, 0])
-   beacon(0, 0, 23, 100, true);
-
-   for (rx = [OFFSET_ANGLE, -OFFSET_ANGLE])
+   if (LARGE_BEACON_ONLY == true)
    {
-      for (ry = [OFFSET_ANGLE, -OFFSET_ANGLE])
+      rotate([0, 0, 0])
+      beacon(0, 0, 35, 100, false);
+   }
+   else if (SMALL_BEACON_ONLY == true)
+   {
+      rotate([0, 0, 0])
+      beacon(0, 0, 35, 80, false);
+   }
+   else if (DRAW_BOARD_SUPPORT == false)
+   {
+      rotate([0, 0, 0])
+      beacon(0, 0, 35, 100, true);
+
+      for (rx = [OFFSET_ANGLE, -OFFSET_ANGLE])
       {
-         rotate([rx, ry, 0])
-         beacon(0, 0, 23, 80, true);
+         for (ry = [OFFSET_ANGLE, -OFFSET_ANGLE])
+         {
+            rotate([rx, ry, 0])
+            beacon(0, 0, 35, 80, true);
+         }
       }
+   }
+
+   if (DRAW_BOARD_SUPPORT == true)
+   {
+      // board support
+      color([1, 0, 0])
+      translate([0, 18, -BASE_HEIGHT + 4 + 1.5])
+      cube([17.5, 41, 3], true);
    }
 }
