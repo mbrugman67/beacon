@@ -6,6 +6,8 @@ beacon::beacon() : beaconLEDs(BEACON_LENGTH)
     lastState = BL_START;
     startupDone = false;
     tics = 0;
+    newPattern = false;
+    rate =1 ;
 
     beaconLEDs.setOutput(&PORTB, &DDRB, PINB1);
     beaconLEDs.setColorOrderRGB();
@@ -49,6 +51,26 @@ void beacon::update()
             this->pulse();
         }  break;
 
+        case BL_RGB:
+        {
+
+        }  break;
+
+        case BL_AVAILABLE:
+        {
+            this->available();
+        }  break;
+
+        case BL_BUSY:
+        {
+            this->busy();
+        }  break;
+
+        case BL_AWAY:
+        {
+            this->away();
+        }  break;
+        
         case BL_LAST: 
         {
             this->clearAll();
@@ -59,6 +81,7 @@ void beacon::update()
     beaconLEDs.sync();
     sei();
 
+    newPattern = false;
     ++tics;
 }
 
@@ -230,111 +253,6 @@ void beacon::pulse()
     }
 }
 
-/*
-bool desk::popo(bool onceOnly)
-{
-    bool retVal = false;
-
-    if (tics > 3)
-    {
-        tics = 0;
-
-        this->clearAll();
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 10;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 30;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 60;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 0;
-        commonPixel.b = 255;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.b = 0;
-        commonPixel.r = 60;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 30;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-        commonPixel.r = 10;
-        beaconLEDs.set_crgb_at(ledPosn, commonPixel);
-
-        if (onceOnly && ledPosn > (BEACON_LENGTH))
-        {
-            retVal = true;
-        }
-    }
-
-    return (retVal);
-}
-
-
-bool desk::tracer(bool onceOnly)
-{
-    this->clearAll();
-
-    for (size_t ii = 0; ii < len; ii++)
-    {
-        beaconLEDs.set_crgb_at((ii + ledPosn) % BEACON_LENGTH, commonPixel);
-    }
-
-    ++ledPosn; ledPosn %= BEACON_LENGTH;
-
-    if (onceOnly && ledPosn > (BEACON_LENGTH - len - 1))
-    {
-        return (true);
-    }
-
-    return (false);
-}
-
-void desk::racer()
-{
-    this->clearAll();
-
-    // base "slow" racer
-    if (tics < 2)
-    {
-        ++ledPosn; ledPosn %= BEACON_LENGTH;
-    }
-    else if (tics == 3)
-    {
-        tics = 0;
-    }
-
-    commonPixel.r = 120;
-    commonPixel.g = 40;
-    commonPixel.b = 0;
-
-    for (size_t ii = 0; ii < 6; ii++)
-    {
-        beaconLEDs.set_crgb_at((ii + ledPosn) % BEACON_LENGTH, commonPixel);
-    }
-
-    commonPixel.r = 40;
-    commonPixel.g = 0;
-    commonPixel.b = 180;
-
-    for (size_t ii = 0; ii < 2; ii++)
-    {
-        beaconLEDs.set_crgb_at((ii + ledPosn2) % BEACON_LENGTH, commonPixel);
-    }
-    ++ledPosn2; ledPosn2 %= BEACON_LENGTH;
-}
-*/
-
 void beacon::allOneColor()
 {
     if (tics < 2)
@@ -357,7 +275,7 @@ void beacon::clearAll()
     }
 }
 
-bool beacon::setBeaconPattern(beacon_light_t ptrn, uint16_t where, uint16_t red, uint16_t grn, uint16_t blu)
+bool beacon::setBeaconPattern(beacon_light_t ptrn, uint16_t rate, uint16_t red, uint16_t grn, uint16_t blu)
 {
     // actual pattern change?
     if (ptrn != lastState && startupDone)
@@ -371,6 +289,7 @@ bool beacon::setBeaconPattern(beacon_light_t ptrn, uint16_t where, uint16_t red,
         commonPixel.b = (uint8_t)blu;
         thisPixel = commonPixel;
 
+        newPattern = true;
         tics = 0;
 
         return (true);

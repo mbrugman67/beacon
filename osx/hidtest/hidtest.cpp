@@ -31,11 +31,10 @@
 struct host_command_t
 {
     uint16_t    ptrn;
-    uint16_t    posn;
     uint16_t    red;
     uint16_t    grn;
     uint16_t    blu;
-    uint16_t    len;
+    uint16_t    rate;
 };
 
 struct config_t
@@ -62,6 +61,10 @@ enum
 	BL_FADE,
 	BL_BREATHE,
 	BL_PULSE,
+	BL_RGB,
+	BL_AVAILABLE,
+	BL_BUSY,
+	BL_AWAY,
 	BL_LAST
 };
 
@@ -80,12 +83,18 @@ int main(int argc, char* argv[])
 	{
 		command = std::string(argv[1]);
 	}
-
-	if (argc == 5)
+	else if (argc == 5)
 	{
 		txData.cmd.red = atoi(argv[2]);
 		txData.cmd.grn = atoi(argv[3]);
 		txData.cmd.blu = atoi(argv[4]);
+	}
+	else if (argc == 6)
+	{
+		txData.cmd.red = atoi(argv[2]);
+		txData.cmd.grn = atoi(argv[3]);
+		txData.cmd.blu = atoi(argv[4]);
+		txData.cmd.rate = atoi(argv[5]);
 	}
 	else
 	{
@@ -121,9 +130,21 @@ int main(int argc, char* argv[])
 	{
 		txData.cmd.ptrn = BL_PULSE;
 	}
+	else if (command == "available")
+	{
+		txData.cmd.ptrn = BL_AVAILABLE;
+	}
+	else if (command == "busy")
+	{
+		txData.cmd.ptrn = BL_BUSY;
+	}
+	else if (command == "away")
+	{
+		txData.cmd.ptrn = BL_AWAY;
+	}
 	else
 	{
-		std::cout << "clear, breathe, or pulse; that's all I know." << std::endl;	
+		std::cout << "clear, available, busy, breathe, or pulse; that's all I know." << std::endl;	
 		hid_close(hDevice);
 		hid_exit();
 		exit (1);

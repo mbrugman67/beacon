@@ -36,11 +36,10 @@ extern volatile uint16_t milliseconds;
 struct host_command_t
 {
     uint16_t    ptrn;
-    uint16_t    posn;
     uint16_t    red;
     uint16_t    grn;
     uint16_t    blu;
-    uint16_t    len;
+    uint16_t    rate;
 };
 
 struct config_t

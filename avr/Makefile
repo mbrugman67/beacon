@@ -74,6 +74,6 @@ clean:
 	rm -rf $(OUTDIR) $(OBJDIR)
 
 load:
-	$(eval BOARD := $(shell btBootycall 1 && ls /dev/cu.usbmod*))
+	$(eval BOARD := $(shell btBootycall 1 && sleep 1 && ls /dev/cu.usbmod*))
 	@echo target device is $(BOARD), writing flash 
 	$(DUDE) -F -V -u -c avr109 -p m32u4 -P $(BOARD) -b 57600 -D -U flash:w:$(TARGET).hex 

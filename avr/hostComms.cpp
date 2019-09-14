@@ -32,7 +32,7 @@ void HOST_COMMS::update(bool rwNow)
                 {
                     last = c;                
                     
-                    flow.setBeaconPattern(c, cfg.config.cmd.posn, 
+                    flow.setBeaconPattern(c, cfg.config.cmd.rate, 
                                         cfg.config.cmd.red, cfg.config.cmd.grn, cfg.config.cmd.blu);
                 }
 
