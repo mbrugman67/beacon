@@ -64,7 +64,9 @@ enum
 	BL_RGB,
 	BL_AVAILABLE,
 	BL_BUSY,
+	BL_DND,
 	BL_AWAY,
+	BL_RAINBOW,
 	BL_LAST
 };
 
@@ -141,6 +143,14 @@ int main(int argc, char* argv[])
 	else if (command == "away")
 	{
 		txData.cmd.ptrn = BL_AWAY;
+	}
+	else if (command == "dnd")
+	{
+		txData.cmd.ptrn = BL_DND;
+	}
+	else if (command == "rainbow")
+	{
+		txData.cmd.ptrn = BL_RAINBOW;
 	}
 	else
 	{

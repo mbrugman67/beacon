@@ -27,7 +27,9 @@ public:
         BL_RGB,
         BL_AVAILABLE,
         BL_BUSY,
+        BL_DND,
         BL_AWAY,
+        BL_RAINBOW,
         BL_LAST
     };
 
@@ -49,7 +51,10 @@ private:
 
     void available();
     void busy();
+    void dnd();
     void away();
+
+    void rainbow();
 
 	inline void allOneColor();
     inline void clearAll();

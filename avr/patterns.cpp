@@ -107,6 +107,35 @@ void beacon::busy()
     }
 }
 
+void beacon::dnd()
+{
+    static uint8_t reds[] = {0, 50, 100, 150};
+
+    if (newPattern)
+    {
+        commonPixel.g = 0;
+        commonPixel.r = 200;
+        commonPixel.b = 0;
+
+        thisPixel.b = 0;
+        thisPixel.g = 0;
+    }
+
+    if (!(tics % 4))
+    {
+        --commonPixel.r;
+        beaconLEDs.set_crgb_at(ID_MID, commonPixel);
+
+        for (size_t ii = 0; ii < 4; ++ii)
+        {
+            thisPixel.r = reds[1];
+            beaconLEDs.set_crgb_at(ii + ID_NORTH, thisPixel);
+        }
+
+        --(reds[1]);
+    }
+}
+
 void beacon::away()
 {
     static bool dir = true;
@@ -156,4 +185,74 @@ void beacon::away()
             beaconLEDs.set_crgb_at(ii, commonPixel);
         }
     }
+}
+
+void beacon::rainbow()
+{
+    static bool whichOne = false;
+    static uint8_t rstate = 0;
+
+    if (newPattern)
+    {
+        commonPixel.r = 0;
+        commonPixel.g = 0;
+        commonPixel.b = 255;
+
+        thisPixel.r = 0;
+        thisPixel.g = 0;
+        thisPixel.b = 255;
+
+        whichOne = false;
+        rstate = 0;
+    }
+
+    if (!(tics % 16))
+    {
+        switch (rstate)
+        {
+            case 0:
+            {
+                --thisPixel.b;
+                ++thisPixel.r;
+
+                if (!thisPixel.b)
+                {
+                    rstate = 1;
+                }
+            }  break;
+
+            case 1:
+            {
+                --thisPixel.r;
+                ++thisPixel.g;
+
+                if (!thisPixel.r)
+                {
+                    rstate = 2;
+                }
+            }  break;
+
+            case 2:
+            default:
+            {
+                --thisPixel.g;
+                ++thisPixel.b;
+
+                if (!thisPixel.g)
+                {
+                    rstate = 0;
+                    whichOne = !whichOne;
+                }
+            }  break;
+        }   
+    }
+
+    if (whichOne)   beaconLEDs.set_crgb_at(ID_MID, commonPixel);
+    else            beaconLEDs.set_crgb_at(ID_MID, thisPixel);
+    
+    for (size_t ii = ID_NORTH; ii < ID_LAST; ++ii)
+    {
+        if (!whichOne)  beaconLEDs.set_crgb_at(ii, commonPixel);
+        else            beaconLEDs.set_crgb_at(ii, thisPixel);
+    }     
 }

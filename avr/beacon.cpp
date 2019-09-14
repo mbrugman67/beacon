@@ -34,7 +34,7 @@ void beacon::update()
 
         case BL_SWING: 
         {
-
+            this->rainbow();
         }  break;
 
         case BL_FADE: 
@@ -66,12 +66,23 @@ void beacon::update()
             this->busy();
         }  break;
 
+        case BL_DND:
+        {
+            this->dnd();
+        }  break;
+
         case BL_AWAY:
         {
             this->away();
         }  break;
+
+        case BL_RAINBOW:
+        {
+            this->rainbow();
+        }  break;
         
         case BL_LAST: 
+        default:
         {
             this->clearAll();
         }  break;
