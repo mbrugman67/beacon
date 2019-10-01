@@ -191,6 +191,7 @@ void beacon::rainbow()
 {
     static bool whichOne = false;
     static uint8_t rstate = 0;
+    static uint8_t pretty = ID_NORTH;
 
     if (newPattern)
     {
@@ -204,9 +205,10 @@ void beacon::rainbow()
 
         whichOne = false;
         rstate = 0;
+        pretty = ID_NORTH;
     }
 
-    if (!(tics % 16))
+    if (!(tics % 4))
     {
         switch (rstate)
         {
@@ -241,18 +243,19 @@ void beacon::rainbow()
                 if (!thisPixel.g)
                 {
                     rstate = 0;
-                    whichOne = !whichOne;
+                    ++pretty;
+                    if (pretty == ID_LAST)  pretty = ID_NORTH;
                 }
             }  break;
         }   
     }
 
-    if (whichOne)   beaconLEDs.set_crgb_at(ID_MID, commonPixel);
-    else            beaconLEDs.set_crgb_at(ID_MID, thisPixel);
+    beaconLEDs.set_crgb_at(ID_MID, commonPixel);
     
     for (size_t ii = ID_NORTH; ii < ID_LAST; ++ii)
     {
-        if (!whichOne)  beaconLEDs.set_crgb_at(ii, commonPixel);
-        else            beaconLEDs.set_crgb_at(ii, thisPixel);
+        beaconLEDs.set_crgb_at(ii, commonPixel);
     }     
+
+    beaconLEDs.set_crgb_at(pretty, thisPixel);
 }
