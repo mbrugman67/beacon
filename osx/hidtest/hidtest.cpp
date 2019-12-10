@@ -72,125 +72,91 @@ enum
 
 int main(int argc, char* argv[])
 {
-	config_t txData;
-	memset((void*)&txData, 0, sizeof(config_t));
-
-	response_to_host_t rxData;
-	memset((void*)&rxData, 0, sizeof(response_to_host_t));
-	size_t moveCount(0);
-
-	std::string command;
-
-	if (argc > 1)
-	{
-		command = std::string(argv[1]);
-	}
-	else if (argc == 5)
-	{
-		txData.cmd.red = atoi(argv[2]);
-		txData.cmd.grn = atoi(argv[3]);
-		txData.cmd.blu = atoi(argv[4]);
-	}
-	else if (argc == 6)
-	{
-		txData.cmd.red = atoi(argv[2]);
-		txData.cmd.grn = atoi(argv[3]);
-		txData.cmd.blu = atoi(argv[4]);
-		txData.cmd.rate = atoi(argv[5]);
-	}
-	else
-	{
-		txData.cmd.red = 255;
-		txData.cmd.grn = 255;
-		txData.cmd.blu = 255;
-	}
-
-
 	hid_device* hDevice = hid_open(0xb337, 0x01, NULL);
 	if (!hDevice) 
 	{
 		std::cerr << "Unable to open device; is it plugged in?" << std::endl;
  		return (-1);
 	}
-	else
-	{
-		std::cout << "Connected to device!" << std::endl;
-	}
 	
 	// Set the hid_read() function to be non-blocking.
 	hid_set_nonblocking(hDevice, 1);
+	
+	config_t txData;
+	memset((void*)&txData, 0, sizeof(config_t));
 
-	if (command == "clear")
-	{
-		txData.cmd.ptrn = BL_CLEAR;
-	}
-	else if (command == "breathe")
-	{
-		txData.cmd.ptrn = BL_BREATHE;
-	}
-	else if (command == "pulse")
-	{
-		txData.cmd.ptrn = BL_PULSE;
-	}
-	else if (command == "available")
-	{
-		txData.cmd.ptrn = BL_AVAILABLE;
-	}
-	else if (command == "busy")
-	{
-		txData.cmd.ptrn = BL_BUSY;
-	}
-	else if (command == "away")
-	{
-		txData.cmd.ptrn = BL_AWAY;
-	}
-	else if (command == "dnd")
-	{
-		txData.cmd.ptrn = BL_DND;
-	}
-	else if (command == "rainbow")
-	{
-		txData.cmd.ptrn = BL_RAINBOW;
-	}
-	else
-	{
-		std::cout << "clear, available, busy, breathe, or pulse; that's all I know." << std::endl;	
-		hid_close(hDevice);
-		hid_exit();
-		exit (1);
-	}
+	response_to_host_t rxData;
+	memset((void*)&rxData, 0, sizeof(response_to_host_t));
+
+	std::string userIn;
+	bool quit = false;
+
 	do
 	{
-		// set some stuffs
-		ssize_t txResult = txResult = hid_write(hDevice, (unsigned char*)&txData.cmd, sizeof(config_t));
-		if (!txResult)
+		userIn.clear();
+
+		std::cout << "+---------------------------------+" << std::endl
+				  << "|  Super duper beacon controller  |" << std::endl
+				  << "+---------------------------------+" << std::endl
+				  << "| 1 - off :(      2 - available   |" << std::endl
+				  << "| 3 - rainbow     4 - busy        |" << std::endl
+				  << "| 5 - DND         6 - away        |" << std::endl
+				  << "| x - buh-bye                     |" << std::endl
+				  << "+---------------------------------+" << std::endl;
+
+		std::cin >> userIn;
+
+		if (userIn == std::string("x"))
 		{
-			std::cerr << "No bytes sent" << std::endl;
-			break;
-		}
-		else if (txResult < 0)
-		{
-			std::cerr << "TX Error " << txResult << std::endl;
-			break;
+			quit = true;
 		}
 		else
 		{
-			usleep(50 * 1000);
-			ssize_t rxResult = hid_read(hDevice, (unsigned char*)&rxData.sequence, sizeof(response_to_host_t));
+			uint16_t what = std::atoi(userIn.c_str());
+			bool duh = false;
 
-			if (rxResult < 0)
+			memset((void*)&txData, 0, sizeof(config_t));
+
+			switch (what)
 			{
-				std::cerr << "RX Error " << rxResult << std::endl;
-				break;
+				case 1:	txData.cmd.ptrn = BL_CLEAR;		break;
+				case 2: txData.cmd.ptrn = BL_AVAILABLE;	break;
+				case 3: txData.cmd.ptrn = BL_RAINBOW;	break;
+				case 4: txData.cmd.ptrn = BL_BUSY;		break;
+				case 5: txData.cmd.ptrn = BL_DND;		break;
+				case 6: txData.cmd.ptrn = BL_AWAY;		break;
+				default: duh = true;					break;
 			}
-			else
+
+			if (!duh)
 			{
-				++moveCount;
-				std::cout << "sequence = " << rxData.sequence << std::endl;
+				// set some stuffs
+				ssize_t txResult = txResult = hid_write(hDevice, (unsigned char*)&txData.cmd, sizeof(config_t));
+				if (!txResult)
+				{
+					std::cerr << "No bytes sent" << std::endl;
+					break;
+				}
+				else if (txResult < 0)
+				{
+					std::cerr << "TX Error " << txResult << std::endl;
+					break;
+				}
+				else
+				{
+					usleep(50 * 1000);
+					ssize_t rxResult = hid_read(hDevice, (unsigned char*)&rxData.sequence, sizeof(response_to_host_t));
+
+					if (rxResult < 0)
+					{
+						std::cerr << "RX Error " << rxResult << std::endl;
+						break;
+					}
+				}
 			}
 		}
-		//usleep(50 * 1000);
-	} while (false);
+		
+	} while (!quit);
 
 	hid_close(hDevice);
 

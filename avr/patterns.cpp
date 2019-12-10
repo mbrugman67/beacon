@@ -58,13 +58,6 @@ void beacon::busy()
         commonPixel.b = 0;
     }
 
-    /*
-    if (!(tics % 2))
-    {
-        ++commonPixel.r;
-    }
-    */
-
     beaconLEDs.set_crgb_at(ID_MID, commonPixel);
 
     //if (!(tics % 2))
@@ -189,73 +182,82 @@ void beacon::away()
 
 void beacon::rainbow()
 {
-    static bool whichOne = false;
-    static uint8_t rstate = 0;
-    static uint8_t pretty = ID_NORTH;
+    static cRGB balls[4];
+    static bool dir;
+    static unsigned char inx = 0;
+    static unsigned char count = 0;
 
     if (newPattern)
     {
+        balls[0].r = 0;
+        balls[0].g = 0;
+        balls[0].b = 255;
+
+        balls[1].r = 0;
+        balls[1].g = 0;
+        balls[1].b = 255;
+
+        balls[2].r = 255;
+        balls[2].g = 0;
+        balls[2].b = 0;
+
+        balls[3].r = 0;
+        balls[3].g = 255;
+        balls[3].b = 0;
+    
         commonPixel.r = 0;
         commonPixel.g = 0;
         commonPixel.b = 255;
 
-        thisPixel.r = 0;
-        thisPixel.g = 0;
-        thisPixel.b = 255;
-
-        whichOne = false;
-        rstate = 0;
-        pretty = ID_NORTH;
-    }
-
-    if (!(tics % 4))
-    {
-        switch (rstate)
-        {
-            case 0:
-            {
-                --thisPixel.b;
-                ++thisPixel.r;
-
-                if (!thisPixel.b)
-                {
-                    rstate = 1;
-                }
-            }  break;
-
-            case 1:
-            {
-                --thisPixel.r;
-                ++thisPixel.g;
-
-                if (!thisPixel.r)
-                {
-                    rstate = 2;
-                }
-            }  break;
-
-            case 2:
-            default:
-            {
-                --thisPixel.g;
-                ++thisPixel.b;
-
-                if (!thisPixel.g)
-                {
-                    rstate = 0;
-                    ++pretty;
-                    if (pretty == ID_LAST)  pretty = ID_NORTH;
-                }
-            }  break;
-        }   
+        dir = true;
+        inx = 0;
+        count = 0;
     }
 
     beaconLEDs.set_crgb_at(ID_MID, commonPixel);
-    
-    for (size_t ii = ID_NORTH; ii < ID_LAST; ++ii)
-    {
-        beaconLEDs.set_crgb_at(ii, commonPixel);
-    }     
 
-    beaconLEDs.set_crgb_at(pretty, thisPixel);
+    if (!(tics % 2))
+    {
+        ++count;
+        if (dir)
+        {
+            --balls[1].b;
+            ++balls[1].r;
+
+            --balls[2].r;
+            ++balls[2].g;
+
+            --balls[3].g;
+            ++balls[3].b;
+
+            if (!count)
+            {
+                ++inx;
+            }
+        }
+        else
+        {
+            ++balls[1].b;
+            --balls[1].r;
+
+            ++balls[2].r;
+            --balls[2].g;
+
+            ++balls[3].g;
+            --balls[3].b;
+
+            if (!balls[1].r)
+            {
+                dir = true;
+                ++inx;
+                balls[1].r = balls[2].g = balls[3].b = 0;
+                balls[1].b = balls[2].r = balls[3].g = 255;
+            }        
+        }
+    }
+        
+    beaconLEDs.set_crgb_at(ID_NORTH, balls[(inx + 3) % 4]);
+    beaconLEDs.set_crgb_at(ID_EAST,  balls[(inx + 2) % 4]);
+    beaconLEDs.set_crgb_at(ID_SOUTH, balls[(inx + 1) % 4]);
+    beaconLEDs.set_crgb_at(ID_WEST,  balls[(inx + 0) % 4]);
 }
