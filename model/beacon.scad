@@ -25,21 +25,21 @@ module beacon(x, y, z, h, draw_sphere = true)
       color([.1, 0, 1])
       {
          translate([x, y, z + h / 2])
-         cylinder(h, SHAFT_RADIUS, SHAFT_RADIUS, true);
+         cylinder(h, SHAFT_RADIUS, SHAFT_RADIUS, true, $fn=100);
 
          translate([x, y, z + h + (CONE_HEIGHT / 2)])
-         cylinder(CONE_HEIGHT, SHAFT_RADIUS, CONE_MAJOR_RADIUS, true);
+         cylinder(CONE_HEIGHT, SHAFT_RADIUS, CONE_MAJOR_RADIUS, true, $fn=100);
       }
    
       color([0, 1, 0])
       {
          translate([0, 0, z + (h + 12) / 2])
-         cylinder(h + 24, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true);
+         cylinder(h + 24, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true, $fn=100);
          
          translate([x, y, h + z + (CONE_HEIGHT / 2) + BALL_TO_CONE_DEPTH])
-         cylinder(CONE_HEIGHT, SHAFT_RADIUS, CONE_MAJOR_RADIUS, true);
+         cylinder(CONE_HEIGHT, SHAFT_RADIUS, CONE_MAJOR_RADIUS, true, $fn=100);
          
-         translate([0, 0, z + h + SHAFT_RADIUS + BALL_RADIUS + BALL_TO_CONE_DEPTH])
+         translate([0, 0, z + h + SHAFT_RADIUS + BALL_RADIUS + BALL_TO_CONE_DEPTH], $fn=100)
          sphere(BALL_RADIUS);
       }
    }
@@ -48,7 +48,7 @@ module beacon(x, y, z, h, draw_sphere = true)
    {
       color([1, 1, 1])
       translate([0, 0, z + h + SHAFT_RADIUS + BALL_RADIUS + BALL_TO_CONE_DEPTH])
-      sphere(BALL_RADIUS);
+      sphere(BALL_RADIUS, $fn=360);
    }
 }
 
@@ -58,7 +58,7 @@ module base(x, y, z, r)
    {
       color([0, 0, 1])
       translate([x, y, z])
-      sphere(r);
+      sphere(r, $fn=100);
       
       sphere(r - WALL_THICKNESS);
       
@@ -67,8 +67,8 @@ module base(x, y, z, r)
       
       translate([0, 0, r - SHAFT_RADIUS / 2])
       {
-         cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true);
-         cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true);
+         cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true, $fn=100);
+         cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true, $fn=100);
       }
       
       for (rx = [OFFSET_ANGLE, -OFFSET_ANGLE])
@@ -78,8 +78,8 @@ module base(x, y, z, r)
             rotate([rx, ry, 0])
             translate([0, 0, r - SHAFT_RADIUS / 2])
             {
-               cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true);
-               cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true);
+               cylinder(WALL_THICKNESS * 2, SHAFT_TUNNEL_RADIUS, SHAFT_TUNNEL_RADIUS, true, $fn=100);
+               cylinder(WALL_THICKNESS * .8, SHAFT_RADIUS, SHAFT_RADIUS, true, $fn=100);
             }
          }
       }      
