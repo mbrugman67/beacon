@@ -2,7 +2,7 @@
 # get the correct location of avr-gcc on OS X
 AVR_INSTALL=$(shell dirname $(shell which avr-gcc))
 
-# get the correction location of the include files for gcc-avr
+# get the correct location of the include files for gcc-avr
 AVR_INCL_DIR=$(shell dirname $(shell locate unistd.h | grep avr-gcc))
 
 # executables
@@ -20,8 +20,6 @@ SLEEP=/bin/sleep
 OBJDIR=./obj/
 OUTDIR=./out/
 TARGET=$(OUTDIR)beacon
-
-#LIBPATH=-L$(shell dirname $(shell locate crtat90c8534.o | grep avr-gcc))
 
 CFLAGS=-Wall -mmcu=atmega32u4 -DF_CPU=16000000UL -DLITTLE_ENDIAN -Os -I$(AVR_INCL_DIR) -funsigned-char -funsigned-bitfields -fpack-struct -fshort-enums -ffunction-sections -fdata-sections
 INCDIRS=-I./ 

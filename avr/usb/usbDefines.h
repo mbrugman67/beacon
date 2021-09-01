@@ -1,6 +1,5 @@
 /***************************************
-* Mostly from ATMEL app notes, with 
-* some additions by BTG
+* Mostly from ATMEL app notes
 ***************************************/
 
 #ifndef USB_DEFINES_H_
